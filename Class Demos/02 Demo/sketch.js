@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let x,y,xVel,yVel;
+let x,y,xVel,yVel,xIsStuck,yIsStuck;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
