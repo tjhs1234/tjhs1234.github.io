@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let x,y,xVel,yVel,isTouchingGround;
+let x,y,xVel,yVel,isTouchingGround, stage;
 
 //C//O//N//S//T//A//N//T//S//
 let GRAVITY = 1;
@@ -22,13 +22,15 @@ function setup() {
   xVel = 0;
   yVel = 0;
   isTouchingGround = false;
+  stage = 1;
 }
 
 function draw() {
-  background(100);
+  background(135, 206, 235);
   character(x, y);
   xMovement(FRICTION);
   yMovement(GRAVITY);
+  desert();
 }
 
 function character(x, y) {
@@ -40,6 +42,12 @@ function character(x, y) {
   ellipse(x + 9, y - 9, 10, 10); // Right Eye
   strokeWeight(2);
   line(x - 5, y + 10, x + 5, y + 10); // Mouth
+}
+
+function desert() {
+  fill(194, 178, 128);
+  strokeWeight(1);
+  rect(0, windowHeight - GROUNDHEIGHT + 1, windowWidth, windowHeight);
 }
 
 function xMovement(FRICTION_) {
@@ -69,9 +77,11 @@ function xMovement(FRICTION_) {
   }
   else if (x + xVel < 20) {
     x = windowWidth - 20;
+    stage -= 1;
   }
   else if (x + xVel > windowWidth - 20) {
     x = 20;
+    stage += 1;
   }
 }
 
