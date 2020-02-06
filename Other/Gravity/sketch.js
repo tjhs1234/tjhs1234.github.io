@@ -5,11 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-<<<<<<< HEAD
-let x,y,xVel,yVel,isTouchingGround, stage;
-=======
-let x,y,xVel,yVel,isTouchingGround,currentBack,jumpsRemaining,jumpIsPrimed;
->>>>>>> f77e562fd91d6ab980530aa394b3595d7c21847e
+let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, jumpIsPrimed;
 
 //C//O//N//S//T//A//N//T//S//
 let GRAVITY = 1;
@@ -17,7 +13,7 @@ let FRICTION = 1;
 let STOPAMOUNT = 2; // The lowest velocity the player can have
 let JUMPHEIGHT = 20;
 let GROUNDHEIGHT = 200;
-let JUMPS = 25;
+let JUMPS = 2;
 //C//O//N//S//T//A//N//T//S//
 
 function setup() {
@@ -27,25 +23,15 @@ function setup() {
   xVel = 0;
   yVel = 0;
   isTouchingGround = false;
-<<<<<<< HEAD
-  stage = 1;
+  currentBack = 0;
 }
 
 function draw() {
   background(135, 206, 235);
-=======
-  currentBack = 0;
-  jumpsRemaining = JUMPS;
-  jumpIsPrimed = true; // Detects whether the user has let go of the up arrow
-}
-
-function draw() {
   updateStage();
->>>>>>> f77e562fd91d6ab980530aa394b3595d7c21847e
-  character(x, y);
   xMovement(FRICTION);
   yMovement(GRAVITY);
-  desert();
+  character(x, y);
 }
 
 function character(x, y) {
@@ -57,12 +43,6 @@ function character(x, y) {
   ellipse(x + 9, y - 9, 10, 10); // Right Eye
   strokeWeight(2);
   line(x - 5, y + 10, x + 5, y + 10); // Mouth
-}
-
-function desert() {
-  fill(194, 178, 128);
-  strokeWeight(1);
-  rect(0, windowHeight - GROUNDHEIGHT + 1, windowWidth, windowHeight);
 }
 
 function xMovement(FRICTION_) {
@@ -92,19 +72,11 @@ function xMovement(FRICTION_) {
   }
   else if (x + xVel < 20) {
     x = windowWidth - 20;
-<<<<<<< HEAD
-    stage -= 1;
-  }
-  else if (x + xVel > windowWidth - 20) {
-    x = 20;
-    stage += 1;
-=======
     currentBack -= 1;
   }
   else if (x + xVel > windowWidth - 20) {
     x = 20;
     currentBack += 1;
->>>>>>> f77e562fd91d6ab980530aa394b3595d7c21847e
   }
 }
 
@@ -118,7 +90,7 @@ function yMovement(GRAVITY_) {
     jumpsRemaining -= 1;
     jumpIsPrimed = false;
   }
-
+  print(currentBack);
   if (!keyIsDown(UP_ARROW)) {
     jumpIsPrimed = true;
   }
