@@ -5,7 +5,7 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, jumpIsPrimed;
+let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, jumpIsPrimed, sunHeight;
 
 //C//O//N//S//T//A//N//T//S//
 let GRAVITY = 1;
@@ -14,16 +14,19 @@ let STOPAMOUNT = 2; // The lowest velocity the player can have
 let JUMPHEIGHT = 20;
 let GROUNDHEIGHT = 200;
 let JUMPS = 2;
+let SUNSIZE = 100;
 //C//O//N//S//T//A//N//T//S//
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  textSize(35);
   x = width/2;
   y = windowHeight - GROUNDHEIGHT - 20;
   xVel = 0;
   yVel = 0;
   isTouchingGround = false;
   currentBack = 0;
+  sunHeight = SUNSIZE;
 }
 
 function draw() {
@@ -90,12 +93,11 @@ function yMovement(GRAVITY_) {
     jumpsRemaining -= 1;
     jumpIsPrimed = false;
   }
-  print(currentBack);
+
   if (!keyIsDown(UP_ARROW)) {
     jumpIsPrimed = true;
   }
 
-  print(jumpsRemaining);
   // Resets jumps
   if (isTouchingGround === true) {
     jumpsRemaining = JUMPS;
@@ -119,9 +121,8 @@ function yMovement(GRAVITY_) {
 
 function updateStage() {
 
-  // Uses the mouse's Y position to change the sky color
-  background(135, 206, 235);
-  //print(mouseY);
+  // Uses the sun's height to change the sky color
+  background(135 - sunHeight / 8, 206 - sunHeight / 5, 235 - sunHeight / 5);
 
   // Makes sure the stage variable is in bounds
   if (currentBack === -1) {
@@ -131,6 +132,17 @@ function updateStage() {
     currentBack = 0;
   }
   
+  // Draws the sun
+  fill(249, 215, 28);
+  strokeWeight(0);
+  if (mouseY > 80) {
+    sunHeight = mouseY;
+  }
+  else {
+    sunHeight = 80;
+  }
+  circle(SUNSIZE, sunHeight, SUNSIZE);
+  
   // Desert Scene
   if (currentBack === 0) { 
     fill(194, 178, 128);
@@ -138,9 +150,14 @@ function updateStage() {
     rect(0, windowHeight - GROUNDHEIGHT, windowWidth, windowHeight);
     strokeWeight(2);
     fill(35, 117, 67);
-    rect(80, windowHeight - GROUNDHEIGHT, 60, -150);
-    rect(500, windowHeight - GROUNDHEIGHT, 60, -150);
-    rect(1400, windowHeight - GROUNDHEIGHT, 60, -150);
+    
+    createCactus(150);
+    createCactus(450);
+    createCactus(855);
+    createCactus(1100);
+    createCactus(1490);
+    createCactus(1800);
+
   }
 
   // Forest Scene
@@ -165,5 +182,27 @@ function updateStage() {
     fill(111, 122, 159);
     rect(0, windowHeight - GROUNDHEIGHT + 30, windowWidth, windowHeight);
   }
+
+  fill(0);
+  text("Thomas Schorr", 30, windowHeight - 50, 1700, 80);
+  print(windowHeight);
+
+}
+
+function createCactus(x_) {
+  strokeWeight(2);
+  fill(35, 117, 67);
+  rect(x_, windowHeight - GROUNDHEIGHT, 60, -150, 10);
+  strokeWeight(4);
+  point(x_ + 40, windowHeight - GROUNDHEIGHT - 7);
+  point(x_ + 16, windowHeight - GROUNDHEIGHT - 29);
+  point(x_ + 28, windowHeight - GROUNDHEIGHT - 78);
+  point(x_ + 47, windowHeight - GROUNDHEIGHT - 36);
+  point(x_ + 10, windowHeight - GROUNDHEIGHT - 53);
+  point(x_ + 50, windowHeight - GROUNDHEIGHT - 69);
+  point(x_ + 15, windowHeight - GROUNDHEIGHT - 110);
+  point(x_ + 9, windowHeight - GROUNDHEIGHT - 9);
+  point(x_ + 44, windowHeight - GROUNDHEIGHT - 130);
+  point(x_ + 16, windowHeight - GROUNDHEIGHT - 135);
 }
 
