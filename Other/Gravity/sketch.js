@@ -1,4 +1,4 @@
-// Gravity Demo
+// Interactive Scene Assignment
 // Thomas Schorr
 // February 5th, 2020
 //
@@ -6,25 +6,21 @@
 // - describe what you did to take this project "above and beyond"
 //
 // Instructions:
-//
-//
-//
-//
-//
-//
-//
-
-let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, jumpIsPrimed, sunHeight, mouseIsPrimed;
+// Use the arrow keys to move the character
+// Touch the sides of the screen or press middle mouse to change backgrounds
+// Move your mouse to change the time of day
 
 //C//O//N//S//T//A//N//T//S//
-let GRAVITY = 1;
-let FRICTION = 1;
+let GRAVITY = 1; // Values higher than 8 will stop the player from jumping
+let FRICTION = 1; // Values higher than 4 will stop the player from moving
 let STOPAMOUNT = 2; // The lowest velocity that the player can have
 let JUMPHEIGHT = 20;
 let GROUNDHEIGHT = 200;
-let JUMPS = 100;
+let JUMPS = 2;
 let SUNSIZE = 100;
 //C//O//N//S//T//A//N//T//S//
+
+let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, sunHeight;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -36,7 +32,6 @@ function setup() {
   isTouchingGround = false;
   currentBack = 0;
   sunHeight = SUNSIZE;
-  mouseIsPrimed = true;
 }
 
 function draw() {
@@ -93,21 +88,16 @@ function xMovement(FRICTION_) {
   }
 }
 
-function yMovement(GRAVITY_) {
-
-  // Listens for key inputs
-  if (keyIsDown(UP_ARROW) && jumpsRemaining > 0 && jumpIsPrimed === true) {
+function keyPressed() {
+  if (keyCode === UP_ARROW && jumpsRemaining > 0) {
     yVel = -JUMPHEIGHT;
     isTouchingGround = false;
     y += 1;
     jumpsRemaining -= 1;
-    jumpIsPrimed = false;
   }
+}
 
-  if (!keyIsDown(UP_ARROW)) {
-    jumpIsPrimed = true;
-  }
-
+function yMovement(GRAVITY_) {
   // Resets jumps
   if (isTouchingGround === true) {
     jumpsRemaining = JUMPS;
@@ -129,19 +119,20 @@ function yMovement(GRAVITY_) {
   }
 }
 
+function mousePressed() {
+  // Allows the user to cycle through backgrounds with middle click
+  
+  if (mouseButton === CENTER){
+    currentBack += 1;
+  }
+}
+
 function updateStage() {
 
   // Uses the sun's height to change the sky color
   background(135 - sunHeight / 8, 206 - sunHeight / 5, 235 - sunHeight / 5);
 
   // Allows the user to cycle through backgrounds with middle click
-  if (!mouseIsPressed) {
-    mouseIsPrimed = true;
-  }
-  if (mouseIsPressed && mouseButton === CENTER && mouseIsPrimed === true) {
-    currentBack += 1;
-    mouseIsPrimed = false;
-  }
 
   // Makes sure the stage variable is in bounds
   if (currentBack === -1) {
@@ -160,7 +151,7 @@ function updateStage() {
   else {
     sunHeight = 80;
   }
-  circle(SUNSIZE, sunHeight, SUNSIZE);
+  ellipse(SUNSIZE, sunHeight, SUNSIZE);
   
   // Desert Scene
   if (currentBack === 0) { 
@@ -184,6 +175,7 @@ function updateStage() {
     fill(96, 158, 56);
     strokeWeight(1);
     rect(0, windowHeight - GROUNDHEIGHT, windowWidth, windowHeight);
+    createTree(250, 50, 200);
   }
   
   // Grassland Scene
@@ -191,7 +183,7 @@ function updateStage() {
     fill(96, 128, 56);
     strokeWeight(1);
     rect(0, windowHeight - GROUNDHEIGHT, windowWidth, windowHeight);
-    createGrass(13, 25, "23514678132");
+    createGrass(13, 25);
   }
 
   // Arctic Scene
@@ -201,6 +193,8 @@ function updateStage() {
     rect(0, windowHeight - GROUNDHEIGHT, windowWidth, windowHeight);
     fill(111, 122, 159);
     rect(0, windowHeight - GROUNDHEIGHT + 30, windowWidth, windowHeight);
+    createIceberg (400, 600, 200);
+    createIceberg (800, 600, 350);
   }
 
   // Adds my name
@@ -216,6 +210,8 @@ function createCactus(x_) {
   fill(35, 117, 67);
   rect(x_, windowHeight - GROUNDHEIGHT, 60, -150, 10);
   strokeWeight(4);
+  
+  // Creates a bunch of dots on the cactus
   point(x_ + 40, windowHeight - GROUNDHEIGHT - 7);
   point(x_ + 16, windowHeight - GROUNDHEIGHT - 29);
   point(x_ + 28, windowHeight - GROUNDHEIGHT - 78);
@@ -228,17 +224,41 @@ function createCactus(x_) {
   point(x_ + 16, windowHeight - GROUNDHEIGHT - 135);
 }
 
-function createGrass(height_, frequency, seed) {
-  // This function generates grass across the ground
-  
-  let currentX = 5;
+function createGrass(height_, frequency) {
 
+  let currentX = 0;
+
+  // Creates a line then moves to the right by the frequency value
+  // until it reaches the edge of the screen
   strokeWeight(1);
   fill(96, 128, 56);
   while (currentX <= windowWidth) {
     line(currentX, windowHeight - GROUNDHEIGHT, currentX, windowHeight - GROUNDHEIGHT - height_);
-    currentX += Number(seed.substring(currentX, currentX + 1));
+    currentX += frequency;
   }
+
+}
+
+function createTree(height_, width_, frequency) {
+  
+  let currentX = 0;
+
+  // Same as the function above, but it creates a tree instead
+  strokeWeight(1);
+  while (currentX <= windowWidth) {
+    fill(98, 78, 44);
+    rect(currentX, windowHeight - GROUNDHEIGHT, width_, -height_);
+    fill(66, 105, 47);
+    triangle(currentX + width_ / 2 - width_, windowHeight - GROUNDHEIGHT - height_ / 2, currentX + width_ / 2 + width_, windowHeight - GROUNDHEIGHT - height_ / 2, currentX + width_ / 2, windowHeight - GROUNDHEIGHT - height_ * 1.5);
+    currentX += frequency;
+  }
+
+}
+
+function createIceberg (x_, width_, height_) {
+  // Creates an iceberg with the given specifications
+  fill(111, 122, 159);
+  triangle(x_, windowHeight - GROUNDHEIGHT, x_ + width_, windowHeight - GROUNDHEIGHT, x_ + width_ / 2, windowHeight - GROUNDHEIGHT - height_);
 
 }
 
