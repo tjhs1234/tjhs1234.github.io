@@ -243,6 +243,7 @@ module.exports = {
       "point": true,
       "quad": true,
       "rect": true,
+      "circle": true,
       "triangle": true,
       "ellipseMode": true,
       "noSmooth": true,

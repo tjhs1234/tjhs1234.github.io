@@ -4,16 +4,25 @@
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
+//
+// Instructions:
+//
+//
+//
+//
+//
+//
+//
 
-let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, jumpIsPrimed, sunHeight;
+let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, jumpIsPrimed, sunHeight, mouseIsPrimed;
 
 //C//O//N//S//T//A//N//T//S//
 let GRAVITY = 1;
 let FRICTION = 1;
-let STOPAMOUNT = 2; // The lowest velocity the player can have
+let STOPAMOUNT = 2; // The lowest velocity that the player can have
 let JUMPHEIGHT = 20;
 let GROUNDHEIGHT = 200;
-let JUMPS = 2;
+let JUMPS = 100;
 let SUNSIZE = 100;
 //C//O//N//S//T//A//N//T//S//
 
@@ -27,6 +36,7 @@ function setup() {
   isTouchingGround = false;
   currentBack = 0;
   sunHeight = SUNSIZE;
+  mouseIsPrimed = true;
 }
 
 function draw() {
@@ -68,7 +78,7 @@ function xMovement(FRICTION_) {
   else if (xVel < STOPAMOUNT && xVel > -STOPAMOUNT && !keyIsDown(RIGHT_ARROW)  && !keyIsDown(LEFT_ARROW)) {
     xVel = 0;
   }
-  
+
   // Updates x position
   if (x + xVel > 20 && x + xVel < windowWidth - 20){
     x += xVel;
@@ -124,6 +134,15 @@ function updateStage() {
   // Uses the sun's height to change the sky color
   background(135 - sunHeight / 8, 206 - sunHeight / 5, 235 - sunHeight / 5);
 
+  // Allows the user to cycle through backgrounds with middle click
+  if (!mouseIsPressed) {
+    mouseIsPrimed = true;
+  }
+  if (mouseIsPressed && mouseButton === CENTER && mouseIsPrimed === true) {
+    currentBack += 1;
+    mouseIsPrimed = false;
+  }
+
   // Makes sure the stage variable is in bounds
   if (currentBack === -1) {
     currentBack = 3;
@@ -131,7 +150,7 @@ function updateStage() {
   else if (currentBack === 4) {
     currentBack = 0;
   }
-  
+
   // Draws the sun
   fill(249, 215, 28);
   strokeWeight(0);
@@ -172,6 +191,7 @@ function updateStage() {
     fill(96, 128, 56);
     strokeWeight(1);
     rect(0, windowHeight - GROUNDHEIGHT, windowWidth, windowHeight);
+    createGrass(13, 25, "23514678132");
   }
 
   // Arctic Scene
@@ -183,13 +203,15 @@ function updateStage() {
     rect(0, windowHeight - GROUNDHEIGHT + 30, windowWidth, windowHeight);
   }
 
+  // Adds my name
   fill(0);
   text("Thomas Schorr", 30, windowHeight - 50, 1700, 80);
-  print(windowHeight);
 
 }
 
 function createCactus(x_) {
+  
+  // Creates a cactus at the given X position
   strokeWeight(2);
   fill(35, 117, 67);
   rect(x_, windowHeight - GROUNDHEIGHT, 60, -150, 10);
@@ -204,5 +226,19 @@ function createCactus(x_) {
   point(x_ + 9, windowHeight - GROUNDHEIGHT - 9);
   point(x_ + 44, windowHeight - GROUNDHEIGHT - 130);
   point(x_ + 16, windowHeight - GROUNDHEIGHT - 135);
+}
+
+function createGrass(height_, frequency, seed) {
+  // This function generates grass across the ground
+  
+  let currentX = 5;
+
+  strokeWeight(1);
+  fill(96, 128, 56);
+  while (currentX <= windowWidth) {
+    line(currentX, windowHeight - GROUNDHEIGHT, currentX, windowHeight - GROUNDHEIGHT - height_);
+    currentX += Number(seed.substring(currentX, currentX + 1));
+  }
+
 }
 
