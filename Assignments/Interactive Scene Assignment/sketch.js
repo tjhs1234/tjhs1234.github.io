@@ -3,7 +3,9 @@
 // February 5th, 2020
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// Made a gravity script
+// Created 4 scenes
+// You can change the character size with a constant and it will act properly
 //
 // Instructions:
 // Use the arrow keys to move the character
@@ -14,19 +16,23 @@
 let GRAVITY = 1; // Values higher than 8 will stop the player from jumping
 let FRICTION = 1; // Values higher than 4 will stop the player from moving
 let STOPAMOUNT = 2; // The lowest velocity that the player can have
+let SPEED = 2;
 let JUMPHEIGHT = 20;
 let GROUNDHEIGHT = 200;
 let JUMPS = 2;
 let SUNSIZE = 100;
+let CHARHEIGHT = 50;
+let CHARWIDTH = 50;
 //C//O//N//S//T//A//N//T//S//
 
 let x,y,xVel,yVel,isTouchingGround, currentBack, jumpsRemaining, sunHeight;
 
 function setup() {
+  
   createCanvas(windowWidth, windowHeight);
   textSize(35);
   x = width/2;
-  y = windowHeight - GROUNDHEIGHT - 20;
+  y = windowHeight - GROUNDHEIGHT - CHARHEIGHT / 2;
   xVel = 0;
   yVel = 0;
   isTouchingGround = false;
@@ -35,6 +41,7 @@ function setup() {
 }
 
 function draw() {
+  
   background(135, 206, 235);
   updateStage();
   xMovement(FRICTION);
@@ -43,10 +50,11 @@ function draw() {
 }
 
 function character(x, y) {
-  fill(0, 200, 0);
+  
+  fill(	177, 156, 217);
   strokeWeight(1);
-  ellipse(x, y, 40, 40); // Head
-  fill(255, 255, 255);
+  ellipse(x, y, CHARWIDTH, CHARHEIGHT); // Head
+  fill(250, 10, 10);
   ellipse(x - 9, y - 9, 10, 10); // Left Eye
   ellipse(x + 9, y - 9, 10, 10); // Right Eye
   strokeWeight(2);
@@ -56,14 +64,26 @@ function character(x, y) {
 function xMovement(FRICTION_) {
   
   // Listens for key inputs
+  
+  // Listens for left arrow
   if (keyIsDown(LEFT_ARROW) && isTouchingGround) {
-    xVel -= 2;
+    xVel -= SPEED;
   }
-  if (keyIsDown(RIGHT_ARROW) && isTouchingGround) {
-    xVel += 2;
+  // Allows you to slightly modify the velocity while in the air 
+  else if  (keyIsDown(LEFT_ARROW) && !isTouchingGround) {
+    xVel -= SPEED / 50;
   }
   
-  // Applies friction
+  // Listens for right arrow
+  if (keyIsDown(RIGHT_ARROW) && isTouchingGround) {
+    xVel += SPEED;
+  }
+  // Allows you to slightly modify the velocity while in the air 
+  else if  (keyIsDown(RIGHT_ARROW) && !isTouchingGround) {
+    xVel += SPEED / 50;
+  }
+  
+  // Applies friction, only while on the ground
   if (xVel >= STOPAMOUNT && isTouchingGround) {
     xVel -= xVel*(FRICTION_ * 0.2);
   }
@@ -75,15 +95,15 @@ function xMovement(FRICTION_) {
   }
 
   // Updates x position
-  if (x + xVel > 20 && x + xVel < windowWidth - 20){
+  if (x + xVel > CHARWIDTH / 2 && x + xVel < windowWidth - CHARWIDTH / 2){
     x += xVel;
   }
-  else if (x + xVel < 20) {
-    x = windowWidth - 20;
+  else if (x + xVel < CHARWIDTH / 2) {
+    x = windowWidth - CHARWIDTH / 2;
     currentBack -= 1;
   }
-  else if (x + xVel > windowWidth - 20) {
-    x = 20;
+  else if (x + xVel > windowWidth - CHARWIDTH / 2) {
+    x = CHARWIDTH / 2;
     currentBack += 1;
   }
 }
@@ -109,11 +129,11 @@ function yMovement(GRAVITY_) {
   }
 
   // Updates y position
-  if (y + yVel < windowHeight - GROUNDHEIGHT){
+  if (y + yVel < windowHeight - GROUNDHEIGHT - CHARHEIGHT / 2){
     y += yVel;
   }
   else {
-    y = windowHeight - GROUNDHEIGHT - 20;
+    y = windowHeight - GROUNDHEIGHT - CHARHEIGHT / 2;
     yVel = 0;
     isTouchingGround = true;
   }
@@ -131,8 +151,6 @@ function updateStage() {
 
   // Uses the sun's height to change the sky color
   background(135 - sunHeight / 8, 206 - sunHeight / 5, 235 - sunHeight / 5);
-
-  // Allows the user to cycle through backgrounds with middle click
 
   // Makes sure the stage variable is in bounds
   if (currentBack === -1) {
@@ -183,7 +201,7 @@ function updateStage() {
     fill(96, 128, 56);
     strokeWeight(1);
     rect(0, windowHeight - GROUNDHEIGHT, windowWidth, windowHeight);
-    createGrass(13, 25);
+    createGrass(13, 10);
   }
 
   // Arctic Scene
@@ -200,7 +218,6 @@ function updateStage() {
   // Adds my name
   fill(0);
   text("Thomas Schorr", 30, windowHeight - 50, 1700, 80);
-
 }
 
 function createCactus(x_) {
@@ -236,7 +253,6 @@ function createGrass(height_, frequency) {
     line(currentX, windowHeight - GROUNDHEIGHT, currentX, windowHeight - GROUNDHEIGHT - height_);
     currentX += frequency;
   }
-
 }
 
 function createTree(height_, width_, frequency) {
@@ -252,13 +268,11 @@ function createTree(height_, width_, frequency) {
     triangle(currentX + width_ / 2 - width_, windowHeight - GROUNDHEIGHT - height_ / 2, currentX + width_ / 2 + width_, windowHeight - GROUNDHEIGHT - height_ / 2, currentX + width_ / 2, windowHeight - GROUNDHEIGHT - height_ * 1.5);
     currentX += frequency;
   }
-
 }
 
 function createIceberg (x_, width_, height_) {
   // Creates an iceberg with the given specifications
   fill(111, 122, 159);
   triangle(x_, windowHeight - GROUNDHEIGHT, x_ + width_, windowHeight - GROUNDHEIGHT, x_ + width_ / 2, windowHeight - GROUNDHEIGHT - height_);
-
 }
 
