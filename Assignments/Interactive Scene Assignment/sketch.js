@@ -63,8 +63,6 @@ function character(x, y) {
 
 function xMovement(FRICTION_) {
   
-  // Listens for key inputs
-  
   // Listens for left arrow
   if (keyIsDown(LEFT_ARROW) && isTouchingGround) {
     xVel -= SPEED;
@@ -211,8 +209,8 @@ function updateStage() {
     rect(0, windowHeight - GROUNDHEIGHT, windowWidth, windowHeight);
     fill(111, 122, 159);
     rect(0, windowHeight - GROUNDHEIGHT + 30, windowWidth, windowHeight);
-    createIceberg (400, 600, 200);
-    createIceberg (800, 600, 350);
+    createIceberg (windowWidth / 2, 600, 200);
+    createIceberg (windowWidth / 3, 600, 350);
   }
 
   // Adds my name
