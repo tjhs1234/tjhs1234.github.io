@@ -4,7 +4,7 @@
 let onLeft, onRight;
 let leftFade = 0;
 let rightFade = 0;
-const FADE_SPEED = 1;
+const FADE_SPEED = 10;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -51,7 +51,7 @@ function renderRectangle() {
 function draw() {
   updateCurrentSide();
   renderRectangle();
-  if (mouseX > width * 0.25 && mouseX < width / 2 && mouseY > height * 0.25 && mouseY < height / 2) {
+  if (mouseX > width * 0.25 && mouseX < width * 0.75 && mouseY > height * 0.25 && mouseY < height * 0.75) {
     fill(80, 60, 240, 120);
   }
   else {
