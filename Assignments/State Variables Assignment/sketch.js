@@ -7,12 +7,14 @@
 
 const FADE_SPEED = 10;
 const MAX_RGB = 255;
+const MIN_RGB = 80;
 let mouseInQuadrant;
 let quad1Fade = MAX_RGB;
 let quad2Fade = MAX_RGB;
 let quad3Fade = MAX_RGB;
 let quad4Fade = MAX_RGB;
 let allFade = MAX_RGB;
+let bottomRightToggle = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -21,12 +23,12 @@ function setup() {
 function drawRectangle(quadrant) {
   strokeWeight(0);
   fill(MAX_RGB);
-  if (quadrant === 1) {
-    if (quad1Fade - FADE_SPEED > 128) {
+  if (mouseInQuadrant === 1) {
+    if (quad1Fade - FADE_SPEED > MIN_RGB) {
       quad1Fade -= FADE_SPEED;
     }
     else {
-      quad1Fade = 128;
+      quad1Fade = MIN_RGB;
     }
     fill(quad1Fade);
     rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2 + 1);
@@ -34,45 +36,72 @@ function drawRectangle(quadrant) {
   else {
     quad1Fade = MAX_RGB;
   }
-  if (quadrant === 2) {
-    if (quad2Fade - FADE_SPEED > 128) {
+  
+  if (mouseInQuadrant === 2) {
+    if (quad2Fade - FADE_SPEED > MIN_RGB) {
       quad2Fade -= FADE_SPEED;
     }
     else {
-      quad2Fade = 128;
+      quad2Fade = MIN_RGB;
     }
     fill(quad2Fade);
     rect(0, 0, windowWidth / 2, windowHeight / 2 + 1);
   }
   else {
-    quad2Fade = MAX_RGB;
+    if (quad2Fade + FADE_SPEED < MAX_RGB) {
+      quad2Fade += FADE_SPEED;
+      print("a");
+    }
+    else {
+      quad2Fade = MAX_RGB;
+    }
+    fill(quad2Fade);
+    rect(0, 0, windowWidth / 2, windowHeight / 2 + 1);
   }
-  if (quadrant === 3) {
-    if (quad3Fade - FADE_SPEED > 128) {
+  
+  if (mouseInQuadrant === 3) {
+    if (quad3Fade - FADE_SPEED > MIN_RGB) {
       quad3Fade -= FADE_SPEED;
     }
     else {
-      quad3Fade = 128;
+      quad3Fade = MIN_RGB;
     }
     fill(quad3Fade);
     rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
   }
   else {
-    quad3Fade = MAX_RGB;
+    if (quad3Fade + FADE_SPEED < MAX_RGB) {
+      quad3Fade += FADE_SPEED;
+      print("a");
+    }
+    else {
+      quad3Fade = MAX_RGB;
+    }
+    fill(quad3Fade);
+    rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
   }
-  if (quadrant === 4) {
-    if (quad4Fade - FADE_SPEED > 128) {
+  
+  if (bottomRightToggle) {
+    if (quad4Fade - FADE_SPEED > MIN_RGB) {
       quad4Fade -= FADE_SPEED;
     }
     else {
-      quad4Fade = 128;
+      quad4Fade = MIN_RGB;
     }
     fill(quad4Fade);
     rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
   }
   else {
-    quad4Fade = MAX_RGB;
+    if (quad4Fade + FADE_SPEED < MAX_RGB) {
+      quad4Fade += FADE_SPEED;
+    }
+    else {
+      quad4Fade = MAX_RGB;
+    }
+    fill(quad4Fade);
+    rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
   }
+  
   if (quadrant === 5) {
     fill(150);
     rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2 + 1);
@@ -87,23 +116,38 @@ function drawRectangle(quadrant) {
 
 function detectMouse() {
   if (mouseX >= windowWidth / 2 && mouseY <= windowHeight / 2) {
-    mouseInQuadrant = 1;
+    return 1;
   }
   else if (mouseX <= windowWidth / 2 && mouseY <= windowHeight / 2) {
-    mouseInQuadrant = 2;
+    return 2;
   }
   else if (mouseX <= windowWidth / 2 && mouseY >= windowHeight / 2) {
-    mouseInQuadrant = 3;
+    return 3;
   }
   else {
-    mouseInQuadrant = 4;
+    return 4;
+  }
+}
+
+function mousePressed() {
+  if (mouseButton === LEFT && bottomRightToggle === false && mouseInQuadrant === 4) {
+    bottomRightToggle = true;
+  }
+  else if (mouseButton === LEFT && bottomRightToggle && mouseInQuadrant === 4) {
+    bottomRightToggle = false;
   }
 }
 
 function draw() {
   background(MAX_RGB);
-  detectMouse();
+  mouseInQuadrant = detectMouse();
+  
   drawRectangle(mouseInQuadrant);
+  drawRectangle(0);
+
+
+  
+  // Dividing lines
   strokeWeight(2);
   line(0, windowHeight / 2, windowWidth, windowHeight / 2);
   line(windowWidth / 2, 0, windowWidth / 2, windowHeight);
