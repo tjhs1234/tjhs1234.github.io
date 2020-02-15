@@ -1,19 +1,16 @@
-// Project Title
-// Your Name
-// Date
+// State Variables Assignment
+// Thomas Schorr
+// February 12th, 2020
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-const FADE_SPEED = 6;
-const MAX_RGB = 255;
-const MIN_RGB = 80;
+const FADE_SPEED = 10;
+const MAX_VALUE = 255;
+const MIN_VALUE = 0;
 let mouseInQuadrant;
-let quad1Fade = MAX_RGB;
-let quad2Fade = MAX_RGB;
-let quad3Fade = MAX_RGB;
-let quad4Fade = MAX_RGB;
-let allFade = MAX_RGB;
+let quad1Fade, quad2Fade, quad3Fade, quad4Fade = MAX_VALUE;
+let quadDirections = [false, false, false, false];
 let bottomRightToggle = false;
 let allToggle = false;
 
@@ -21,100 +18,101 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
-function drawRectangle() {
-  strokeWeight(0);
-  fill(MAX_RGB);
-  if (mouseInQuadrant === 1) {
-    if (quad1Fade - FADE_SPEED > MIN_RGB) {
+function updateFade(quad1, quad2, quad3, quad4) {
+  
+  if (quad1) {
+    if (quad1Fade - FADE_SPEED > MIN_VALUE) {
       quad1Fade -= FADE_SPEED;
     }
     else {
-      quad1Fade = MIN_RGB;
+      quad1Fade = MIN_VALUE;
     }
-    fill(quad1Fade);
-    rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2 + 1);
   }
+  
   else {
-    if (quad1Fade + FADE_SPEED < MAX_RGB) {
+    if (quad1Fade + FADE_SPEED < MAX_VALUE) {
       quad1Fade += FADE_SPEED;
     }
     else {
-      quad1Fade = MAX_RGB;
+      quad1Fade = MAX_VALUE;
     }
-    fill(quad1Fade);
-    rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2 + 1);
   }
   
-  if (mouseInQuadrant === 3) {
-    if (quad3Fade - FADE_SPEED > MIN_RGB) {
+
+  if (quad2) {
+    if (quad2Fade - FADE_SPEED > MIN_VALUE) {
+      quad2Fade -= FADE_SPEED;
+    }
+    else {
+      quad2Fade = MIN_VALUE;
+    }
+  }
+  
+  else {
+    if (quad2Fade + FADE_SPEED < MAX_VALUE) {
+      quad2Fade += FADE_SPEED;
+    }
+    else {
+      quad2Fade = MAX_VALUE;
+    }
+  }
+
+
+  if (quad3) {
+    if (quad3Fade - FADE_SPEED > MIN_VALUE) {
       quad3Fade -= FADE_SPEED;
     }
     else {
-      quad3Fade = MIN_RGB;
-    }
-    fill(quad3Fade);
-    rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
+      quad3Fade = MIN_VALUE;
+    } 
   }
+
   else {
-    if (quad3Fade + FADE_SPEED < MAX_RGB) {
+    if (quad3Fade + FADE_SPEED < MAX_VALUE) {
       quad3Fade += FADE_SPEED;
     }
     else {
-      quad3Fade = MAX_RGB;
+      quad3Fade = MAX_VALUE;
     }
-    fill(quad3Fade);
-    rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
   }
-  
-  if (bottomRightToggle) {
-    if (quad4Fade - FADE_SPEED > MIN_RGB) {
+
+
+  if (quad4) {
+    if (quad4Fade - FADE_SPEED > MIN_VALUE) {
       quad4Fade -= FADE_SPEED;
     }
     else {
-      quad4Fade = MIN_RGB;
-    }
-    fill(quad4Fade);
-    rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
+      quad4Fade = MIN_VALUE;
+    } 
   }
+
   else {
-    if (quad4Fade + FADE_SPEED < MAX_RGB) {
+    if (quad4Fade + FADE_SPEED < MAX_VALUE) {
       quad4Fade += FADE_SPEED;
     }
     else {
-      quad4Fade = MAX_RGB;
+      quad4Fade = MAX_VALUE;
     }
-    fill(quad4Fade);
-    rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
-  }
-  if (allToggle) {
-    if (allFade - FADE_SPEED > MIN_RGB) {
-      allFade -= FADE_SPEED;
-    }
-    else {
-      allFade = MIN_RGB;
-    }
-    fill(allFade);
-    rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2 + 1);
-    rect(0, 0, windowWidth / 2, windowHeight / 2 + 1);
-    rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
-    rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
-  }
-  else {
-    if (allFade + FADE_SPEED < MAX_RGB) {
-      allFade += FADE_SPEED;
-    }
-    else {
-      allFade = MAX_RGB;
-    }
-    fill(allFade);
-    rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2 + 1);
-    rect(0, 0, windowWidth / 2, windowHeight / 2 + 1);
-    rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
-    rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
   }
 }
 
+function drawRectangle() {
+
+  fill(quad1Fade);
+  rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2);
+
+  fill(quad2Fade);
+  rect(0, 0, windowWidth / 2, windowHeight / 2);
+
+  fill(quad3Fade);
+  rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
+  
+  fill(quad4Fade);
+  rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
+}
+
 function detectMouse() {
+  
   if (mouseX >= windowWidth / 2 && mouseY <= windowHeight / 2) {
     return 1;
   }
@@ -126,6 +124,30 @@ function detectMouse() {
   }
   else {
     return 4;
+  }
+}
+
+function quadDirectionLogic() {
+  
+  if (mouseInQuadrant !== 2) {
+    allToggle = false;
+  }
+
+  quadDirections = [false, false, false, false];
+  
+  if (mouseInQuadrant === 1 || mouseInQuadrant === 3) {
+    quadDirections[mouseInQuadrant - 1] = true;
+  }
+  
+  if (bottomRightToggle) {
+    quadDirections[3] = true;
+  }
+  else {
+    quadDirections[3] = false;
+  }
+  
+  if (allToggle) {
+    quadDirections = [true, true, true, true];
   }
 }
 
@@ -141,17 +163,13 @@ function mousePressed() {
   }
 }
 
-function draw() {
-  background(MAX_RGB);
+function draw() { 
+  background(MAX_VALUE);
   mouseInQuadrant = detectMouse();
-  if (!(mouseInQuadrant === 2)) {
-    allToggle = false;
-  }
+  updateFade(quadDirections[0], quadDirections[1], quadDirections[2], quadDirections[3]);
   drawRectangle();
+  quadDirectionLogic();
 
-
-
-  
   // Dividing lines
   strokeWeight(2);
   line(0, windowHeight / 2, windowWidth, windowHeight / 2);
