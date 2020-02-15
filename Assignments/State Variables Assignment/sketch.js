@@ -9,105 +9,52 @@ const FADE_SPEED = 10;
 const MAX_VALUE = 255;
 const MIN_VALUE = 0;
 let mouseInQuadrant;
-let quad1Fade, quad2Fade, quad3Fade, quad4Fade = MAX_VALUE;
+let quadFadeValues = [MAX_VALUE, MAX_VALUE, MAX_VALUE, MAX_VALUE];
 let quadDirections = [false, false, false, false];
 let bottomRightToggle = false;
 let allToggle = false;
+let simonSays = []; 
+let mode = "reg";
+let inFlash = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
-function updateFade(quad1, quad2, quad3, quad4) {
+function updateFade() {
   
-  if (quad1) {
-    if (quad1Fade - FADE_SPEED > MIN_VALUE) {
-      quad1Fade -= FADE_SPEED;
+  for (let i = 0; i < 4; i++) {
+    if (quadDirections[i]) {
+      if (quadFadeValues[i] - FADE_SPEED > MIN_VALUE) {
+        quadFadeValues[i] -= FADE_SPEED;
+      }
+      else {
+        quadFadeValues[i] = MIN_VALUE;
+      }
     }
     else {
-      quad1Fade = MIN_VALUE;
-    }
-  }
-  
-  else {
-    if (quad1Fade + FADE_SPEED < MAX_VALUE) {
-      quad1Fade += FADE_SPEED;
-    }
-    else {
-      quad1Fade = MAX_VALUE;
-    }
-  }
-  
-
-  if (quad2) {
-    if (quad2Fade - FADE_SPEED > MIN_VALUE) {
-      quad2Fade -= FADE_SPEED;
-    }
-    else {
-      quad2Fade = MIN_VALUE;
-    }
-  }
-  
-  else {
-    if (quad2Fade + FADE_SPEED < MAX_VALUE) {
-      quad2Fade += FADE_SPEED;
-    }
-    else {
-      quad2Fade = MAX_VALUE;
-    }
-  }
-
-
-  if (quad3) {
-    if (quad3Fade - FADE_SPEED > MIN_VALUE) {
-      quad3Fade -= FADE_SPEED;
-    }
-    else {
-      quad3Fade = MIN_VALUE;
-    } 
-  }
-
-  else {
-    if (quad3Fade + FADE_SPEED < MAX_VALUE) {
-      quad3Fade += FADE_SPEED;
-    }
-    else {
-      quad3Fade = MAX_VALUE;
-    }
-  }
-
-
-  if (quad4) {
-    if (quad4Fade - FADE_SPEED > MIN_VALUE) {
-      quad4Fade -= FADE_SPEED;
-    }
-    else {
-      quad4Fade = MIN_VALUE;
-    } 
-  }
-
-  else {
-    if (quad4Fade + FADE_SPEED < MAX_VALUE) {
-      quad4Fade += FADE_SPEED;
-    }
-    else {
-      quad4Fade = MAX_VALUE;
+      if (quadFadeValues[i] + FADE_SPEED < MAX_VALUE) {
+        quadFadeValues[i] += FADE_SPEED;
+      }
+      else {
+        quadFadeValues[i] = MAX_VALUE;
+      }
     }
   }
 }
 
 function drawRectangle() {
 
-  fill(quad1Fade);
+  fill(quadFadeValues[0]);
   rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2);
 
-  fill(quad2Fade);
+  fill(quadFadeValues[1]);
   rect(0, 0, windowWidth / 2, windowHeight / 2);
 
-  fill(quad3Fade);
+  fill(quadFadeValues[2]);
   rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
   
-  fill(quad4Fade);
+  fill(quadFadeValues[3]);
   rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
 }
 
@@ -127,7 +74,29 @@ function detectMouse() {
   }
 }
 
-function quadDirectionLogic() {
+function flashQuad(quad) {
+  inFlash = true;
+  quadDirections = [false, false, false, false];
+  if (quadFadeValues[quad - 1] !== MIN_VALUE) {
+    quadDirections[quad - 1] = true;
+    redraw();
+
+  }
+  else if (quadFadeValues[quad - 1] !== MAX_VALUE) {
+    quadDirections[quad - 1] = false;
+    redraw();
+  }
+}
+
+//function keyPressed() {
+
+//  for (let i = 0; i < simonSays.length; i++) {
+
+//  }
+
+//}
+
+function normalQuadDirectionLogic() {
   
   if (mouseInQuadrant !== 2) {
     allToggle = false;
@@ -166,9 +135,13 @@ function mousePressed() {
 function draw() { 
   background(MAX_VALUE);
   mouseInQuadrant = detectMouse();
-  updateFade(quadDirections[0], quadDirections[1], quadDirections[2], quadDirections[3]);
+  if (!inFlash) {
+    flashQuad(1);
+  }
+  updateFade();
   drawRectangle();
-  quadDirectionLogic();
+  
+  //normalQuadDirectionLogic();
 
   // Dividing lines
   strokeWeight(2);
