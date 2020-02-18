@@ -1,33 +1,32 @@
-// State Variables Assignment
+// State Variables Assignment 
 // Thomas Schorr
 // February 12th, 2020
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// Completed the expert challenge
+// Added a random mode, activated by pressing r
 
-const FADE_SPEED = 30;
+const FADE_SPEED = 20;
 const MAX_VALUE = 255;
-const MIN_VALUE = 0;
+const MIN_VALUE = 100;
 let mouseInQuadrant;
 let quadFadeValues = [MAX_VALUE, MAX_VALUE, MAX_VALUE, MAX_VALUE];
 let quadDirections = [false, false, false, false];
 let bottomRightToggle = false;
 let allToggle = false;
-let simonSays = [];
-let simonSaysReplay = 0;
-let simonSaysTest = 0; 
+let randomQuad = 1;
 let mode = 1;
 let flashHalfDone = false;
-let quadToFlash = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
-function updateFade() {
-  
+function updateFade(quadDirections_) {
+  // Updates the fade values, goes up if the direction 
+  // in quadDirections is true and down if it is false
   for (let i = 0; i < 4; i++) {
-    if (quadDirections[i]) {
+    if (quadDirections_[i]) {
       if (quadFadeValues[i] - FADE_SPEED > MIN_VALUE) {
         quadFadeValues[i] -= FADE_SPEED;
       }
@@ -47,22 +46,22 @@ function updateFade() {
 }
 
 function drawRectangle() {
-
-  fill(quadFadeValues[0]);
+  // Draws the four rectangles, taking into account its quadFadeValue
+  fill(255, quadFadeValues[0], quadFadeValues[0]);
   rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2);
 
-  fill(quadFadeValues[1]);
+  fill(255, quadFadeValues[1], 255);
   rect(0, 0, windowWidth / 2, windowHeight / 2);
 
-  fill(quadFadeValues[2]);
+  fill(quadFadeValues[2], quadFadeValues[2], 255);
   rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
   
-  fill(quadFadeValues[3]);
+  fill(quadFadeValues[3], 255, quadFadeValues[3]);
   rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
 }
 
 function detectMouse() {
-  
+  // Detects the quadrant the mouse is in
   if (mouseX >= windowWidth / 2 && mouseY <= windowHeight / 2) {
     return 1;
   }
@@ -78,31 +77,39 @@ function detectMouse() {
 }
 
 function flashQuad(quad_, returnMode) {
+  // Flashes a quadrant, disabling all other
+  // logic until it has been fully flashed
   mode = 3;
+  
   if  (quadFadeValues[quad_ - 1] !== MIN_VALUE && !flashHalfDone) {
+    // Ups the fade value if it hasn't hit the max value yet
     quadDirections[quad_ - 1] = true;
   }
   else if (quadFadeValues[quad_ - 1] === MIN_VALUE && !flashHalfDone) {
+    // Once it's at the max value, changes the flashHalfDone variable
     flashHalfDone = true;
   }
   else if (quadFadeValues[quad_ - 1] !== MAX_VALUE) {
+    // Downs the fade value if it has already hit the max fade value
     quadDirections[quad_ - 1] = false;
   }
   else {
+    // Once it's done, set mode to returnMode ans reset flashHalfDone
     mode = returnMode;
     flashHalfDone = false;
   }
 }
 
 function logic(mode) {
-  
+  // Main logic function
   quadDirections = [false, false, false, false];
-  
+  // Normal logic, made according to instructions
   if (mode === 1) {
     
     if (mouseInQuadrant !== 2) {
       allToggle = false;
     }
+    
     if (mouseInQuadrant === 1 || mouseInQuadrant === 3) {
       quadDirections[mouseInQuadrant - 1] = true;
     }
@@ -116,38 +123,24 @@ function logic(mode) {
 
     if (allToggle) {
       quadDirections = [true, true, true, true];
+      bottomRightToggle = false;
     }
   }
 
   else if (mode === 2) {
-    simonSays[0] = Math.floor(Math.random() * 4) + 1;
-    replaySimonSays();
+    // Flashes random quadrants
+    randomQuad = Math.floor(Math.random() * 4) + 1;
+    flashQuad(randomQuad, 2);
   }
 
   else if (mode === 3) {
-    flashQuad(quadToFlash, 4);
-  }
-
-  else if (mode === 4) {
-    replaySimonSays();
-  }
-}
-
-function replaySimonSays() {
-  mode = 4;
-  quadToFlash = simonSays[simonSaysReplay];
-  flashQuad(quadToFlash, 4);
-  if (simonSaysReplay < simonSays.length + 1){
-    simonSaysReplay += 1;
-  }
-  if (simonSaysReplay === simonSays.length + 1) {
-    simonSaysReplay = 0;
-    mode = 2;
+    // Mode used for flashing a quadrant, disables all other logic
+    flashQuad(randomQuad, 2);
   }
 }
 
 function keyTyped() {
-
+  // Listens for the user to type r, then switches modes
   if (key === 'r' && mode === 1) {
     mode = 2;
   }
@@ -159,7 +152,8 @@ function keyTyped() {
 }
 
 function mousePressed() {
-  
+  // Listens for the user to press the mouse, then checks
+  // what quadrant it's in and changes the appropriate variable
   if (mouseButton === LEFT && !bottomRightToggle && mouseInQuadrant === 4) {
     bottomRightToggle = true;
   }
@@ -172,18 +166,18 @@ function mousePressed() {
 }
 
 function draw() { 
-  
+  // Main draw loop
   background(MAX_VALUE);
   
   mouseInQuadrant = detectMouse();
   
   logic(mode);
   
-  updateFade();
+  updateFade(quadDirections);
   
   drawRectangle();
 
-  // Dividing lines
+  // Draws the dividing lines
   strokeWeight(5);
   line(0, windowHeight / 2, windowWidth, windowHeight / 2);
   line(windowWidth / 2, 0, windowWidth / 2, windowHeight);
