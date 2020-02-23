@@ -47,16 +47,16 @@ function updateFade(quadDirections_) {
 
 function drawRectangle() {
   // Draws the four rectangles, taking into account its quadFadeValue
-  fill(255, quadFadeValues[0], quadFadeValues[0]);
+  fill(quadFadeValues[0], quadFadeValues[0], 255);
   rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2);
 
-  fill(255, quadFadeValues[1], 255);
+  fill(255, quadFadeValues[1], quadFadeValues[1]);
   rect(0, 0, windowWidth / 2, windowHeight / 2);
 
-  fill(quadFadeValues[2], quadFadeValues[2], 255);
+  fill(quadFadeValues[2], 255, quadFadeValues[2]);
   rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
   
-  fill(quadFadeValues[3], 255, quadFadeValues[3]);
+  fill(255, quadFadeValues[3], 255);
   rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
 }
 
