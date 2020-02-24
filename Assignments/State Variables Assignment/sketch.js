@@ -4,14 +4,15 @@
 //
 // Extra for Experts:
 // Completed the expert challenge
-// Added a random mode, activated by pressing r
+// Added a random mode, activated by pressing r, deactivated by pressing a
 
-const FADE_SPEED = 20;
+const FADE_SPEED = 15;
 const MAX_VALUE = 255;
 const MIN_VALUE = 100;
+const LINE_THICKNESS = 1;
 let mouseInQuadrant;
 let quadFadeValues = [MAX_VALUE, MAX_VALUE, MAX_VALUE, MAX_VALUE];
-let quadDirections = [false, false, false, false];
+let quadFadeDirections = [false, false, false, false];
 let bottomRightToggle = false;
 let allToggle = false;
 let randomQuad = 1;
@@ -22,11 +23,11 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
-function updateFade(quadDirections_) {
-  // Updates the fade values, goes up if the direction 
-  // in quadDirections is true and down if it is false
+function updateFade(quadFadeDirections_) {
+  // Updates the fade values, goes up if its position 
+  // in quadDirections is true and down if it's false
   for (let i = 0; i < 4; i++) {
-    if (quadDirections_[i]) {
+    if (quadFadeDirections_[i]) {
       if (quadFadeValues[i] - FADE_SPEED > MIN_VALUE) {
         quadFadeValues[i] -= FADE_SPEED;
       }
@@ -45,18 +46,18 @@ function updateFade(quadDirections_) {
   }
 }
 
-function drawRectangle() {
+function drawRectangle(quadFadeValues_) {
   // Draws the four rectangles, taking into account its quadFadeValue
-  fill(quadFadeValues[0], quadFadeValues[0], 255);
+  fill(quadFadeValues_[0], quadFadeValues_[0], 255);
   rect(windowWidth, 0, -windowWidth / 2, windowHeight / 2);
 
-  fill(255, quadFadeValues[1], quadFadeValues[1]);
+  fill(255, quadFadeValues_[1], quadFadeValues_[1]);
   rect(0, 0, windowWidth / 2, windowHeight / 2);
 
-  fill(quadFadeValues[2], 255, quadFadeValues[2]);
+  fill(quadFadeValues_[2], 255, quadFadeValues_[2]);
   rect(0, windowHeight, windowWidth / 2, -windowHeight / 2);
   
-  fill(255, quadFadeValues[3], 255);
+  fill(255, quadFadeValues_[3], 255);
   rect(windowWidth, windowHeight, -windowWidth / 2, -windowHeight / 2);
 }
 
@@ -82,19 +83,19 @@ function flashQuad(quad_, returnMode) {
   mode = 3;
   
   if  (quadFadeValues[quad_ - 1] !== MIN_VALUE && !flashHalfDone) {
-    // Ups the fade value if it hasn't hit the max value yet
-    quadDirections[quad_ - 1] = true;
+    // Increases the fade value if it hasn't hit the max value yet
+    quadFadeDirections[quad_ - 1] = true;
   }
   else if (quadFadeValues[quad_ - 1] === MIN_VALUE && !flashHalfDone) {
     // Once it's at the max value, changes the flashHalfDone variable
     flashHalfDone = true;
   }
   else if (quadFadeValues[quad_ - 1] !== MAX_VALUE) {
-    // Downs the fade value if it has already hit the max fade value
-    quadDirections[quad_ - 1] = false;
+    // Decreases the fade value if it has already hit the max fade value
+    quadFadeDirections[quad_ - 1] = false;
   }
   else {
-    // Once it's done, set mode to returnMode ans reset flashHalfDone
+    // Once it's done, set the logic mode to returnMode and reset flashHalfDone
     mode = returnMode;
     flashHalfDone = false;
   }
@@ -102,28 +103,34 @@ function flashQuad(quad_, returnMode) {
 
 function logic(mode) {
   // Main logic function
-  quadDirections = [false, false, false, false];
-  // Normal logic, made according to instructions
+  quadFadeDirections = [false, false, false, false];
+  
+  // Returns the mode from random flashing to normal logic
+  // It had to be put here, it did not work in the keyTyped() function
+  if (key === 't' && mode === 2) {
+    mode = 1;
+  }
+  
+  
   if (mode === 1) {
-    
+    // Normal logic, made according to instructions
     if (mouseInQuadrant !== 2) {
       allToggle = false;
     }
     
     if (mouseInQuadrant === 1 || mouseInQuadrant === 3) {
-      quadDirections[mouseInQuadrant - 1] = true;
+      quadFadeDirections[mouseInQuadrant - 1] = true;
     }
 
     if (bottomRightToggle) {
-      quadDirections[3] = true;
+      quadFadeDirections[3] = true;
     }
     else {
-      quadDirections[3] = false;
+      quadFadeDirections[3] = false;
     }
 
     if (allToggle) {
-      quadDirections = [true, true, true, true];
-      bottomRightToggle = false;
+      quadFadeDirections = [true, true, true, true];
     }
   }
 
@@ -144,11 +151,6 @@ function keyTyped() {
   if (key === 'r' && mode === 1) {
     mode = 2;
   }
-  else if (key === 'r' && mode === 2) {
-    mode = 1;
-    bottomRightToggle = false;
-    allToggle = false;
-  }
 }
 
 function mousePressed() {
@@ -165,20 +167,24 @@ function mousePressed() {
   }
 }
 
+function drawDividingLines(thickness) {
+  // Draws the dividing lines
+  strokeWeight(thickness);
+  line(0, windowHeight / 2, windowWidth, windowHeight / 2);
+  line(windowWidth / 2, 0, windowWidth / 2, windowHeight);
+}
+
 function draw() { 
   // Main draw loop
-  background(MAX_VALUE);
-  
   mouseInQuadrant = detectMouse();
+
+  background(MAX_VALUE);
   
   logic(mode);
   
-  updateFade(quadDirections);
+  updateFade(quadFadeDirections);
   
-  drawRectangle();
+  drawRectangle(quadFadeValues);
 
-  // Draws the dividing lines
-  strokeWeight(5);
-  line(0, windowHeight / 2, windowWidth, windowHeight / 2);
-  line(windowWidth / 2, 0, windowWidth / 2, windowHeight);
+  drawDividingLines(LINE_THICKNESS);
 }
