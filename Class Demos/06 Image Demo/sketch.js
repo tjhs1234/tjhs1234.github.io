@@ -1,30 +1,54 @@
-// 06 Image Demo
-// Thomas Schorr
-// February 25th, 2020
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
-
-let movingLeft = true;
+// Image Demo
 let lionL, lionR;
+let movingLeft = false;
+let pinImages = [];
+let pinToLoad = 0;
 
-function preload() {
-  lionL = loadImage("assets/lion-left.png");
-  lionR = loadImage("assets/lion-right.png");
+function preload(){
+  lionL = loadImage("assets/pin-05.png");
+  lionR = loadImage("assets/pin-00.png");
+  for (let i = 0; i < 9; i++) {
+    pinImages.push(loadImage("assets/pin-0" + i.toString() + ".png"));
+  }
+}
+
+function determineDirection(){
+  if(pmouseX < mouseX){
+    //which way? Moving right
+    movingLeft = false;
+  }
+  else if (pmouseX > mouseX){
+    //moving left
+    movingLeft = true;
+  }
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  imageMode("center");
+  imageMode(CENTER);
   noCursor();
 }
 
-function mouseDirection() {
-  movingLeft = false;
-}
 function draw() {
+  let speedChange = map(mouseX, 0, width, 1, 4);
   background(220);
-  image(lionR,mouseX,mouseY);
-  image(lionL,mouseX,mouseY);
-  print(movingLeft);
+  determineDirection();
+  print(speedChange);
+  if (movingLeft) {
+    pinToLoad += 1;
+    if (pinToLoad > pinImages.length - 1) {
+      pinToLoad -= pinImages.length - 1;
+    }
+  }
+  else if (!movingLeft) {
+    pinToLoad -= 1;
+    if (pinToLoad < 0) {
+      pinToLoad += pinImages.length - 1;
+    }
+  }
+
+  image(pinImages[pinToLoad], width/2, height/2);
+  
+  
+
 }
