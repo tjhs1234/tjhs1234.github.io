@@ -1,0 +1,1 @@
+function word0(keyArray){let someMap=new Map();for(let i=0;i<keyArray.length;i++){someMap.set(keyArray[i],0);}return someMap;}
