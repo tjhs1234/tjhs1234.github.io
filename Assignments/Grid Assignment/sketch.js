@@ -5,52 +5,72 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let squareSize = 10;
-let fillcolor = [0,0,0];
+let squaresInLine = 50;
+let squareMoveAmount = 0;
+let fillColor = [0,0,0];
+let windowRatio = 0;
+let verticalSquaresInLine = 0;
+let verticalSquareMoveAmount = 0;
 
-const INCREASE_VALUE = 10;
-const MAX_SQUARE_SIZE = 70;
-const MIN_SQUARE_SIZE = 10;
+const COLOR_SCHEME = 5;
+const INCREASE_VALUE = 2;
+const MAX_SQUARE_AMOUNT = 160;
+const MIN_SQUARE_AMOUNT = 10;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   circleGrid();
+  squareMoveAmount = windowWidth / squaresInLine;
+  windowRatio = height / width;
+  verticalSquaresInLine = squaresInLine * windowRatio;
+  verticalSquareMoveAmount = verticalSquaresInLine * windowRatio;
 }
 
 function keyPressed() {
   if (key !== "Shift") {
-    circleGrid();
+    //circleGrid();
   }
 }
 
 function mouseClicked() {
-  if (mouseButton === LEFT && key === "Shift" && keyIsPressed && squareSize > MIN_SQUARE_SIZE) {
-    squareSize -= INCREASE_VALUE;
+  if (mouseButton === LEFT && key === "Shift" && keyIsPressed && squaresInLine > MIN_SQUARE_AMOUNT) {
+    //squaresInLine = squaresInLine / INCREASE_VALUE;
   }
   
-  else if (mouseButton === LEFT && !keyIsPressed && squareSize < MAX_SQUARE_SIZE) {
-    squareSize += INCREASE_VALUE;
+  else if (mouseButton === LEFT && !keyIsPressed && squaresInLine < MAX_SQUARE_AMOUNT) {
+    //squaresInLine = squaresInLine * INCREASE_VALUE;
   }
   circleGrid();
 }
 
 function setRandomColor() {
-  fillcolor[0] = random(0, 255);
-  fillcolor[1] = random(0, 255);
-  fillcolor[2] = random(0, 255);
-}
-//fillcolor[0], fillcolor[1], fillcolor[2]
-function circleGrid() {
-  for (let x = 0; x < width; x += squareSize) {
-    for (let y = 0; y < height; y += squareSize) {
-      strokeWeight(0.7);
-      setRandomColor();
-      fill(fillcolor[0], fillcolor[1], fillcolor[2]);
-      rect(x,y,squareSize,squareSize);
-    }
+  if (COLOR_SCHEME === "green") {
+    fillColor[0] = random(50, 150);
+    fillColor[1] = random(200, 255);
+    fillColor[2] = random(50, 150);
+  }
+  else if (COLOR_SCHEME === "light") {
+    fillColor[0] = random(50, 150);
+    fillColor[1] = random(200, 255);
+    fillColor[2] = random(50, 150);
   }
 }
 
+function circleGrid() {
+  for (let x = 0; x < width; x += squareMoveAmount) {
+  print(squareMoveAmount);
+  }
+  //for (let x = 0; x < width; x += squareMoveAmount) {
+    //for (let y = 0; y < height; y += verticalSquareMoveAmount) {
+
+      //strokeWeight(0.7);
+      //setRandomColor();
+      //fill(fillColor[0], fillColor[1], fillColor[2]);
+      //rect(x,y,squareMoveAmount,verticalSquareMoveAmount);
+    //}
+  //}
+}
+
 function draw() {
-  print(squareSize);
+
 }
