@@ -1,0 +1,1 @@
+function pairs(wordArray){let someMap=new Map();for(let i=0;i<wordArray.length;i++){someMap.set(wordArray[i].charAt(0),wordArray[i].charAt(wordArray[i].length-1));}return someMap;}
