@@ -14,10 +14,10 @@ let verticalSquaresInLine = 0;
 let verticalSquareMoveAmount = 0;
 
 //C//O//N//S//T//A//N//T//S//
-const COLOR_SCHEME = "horizonalStripe" ;
-const INCREASE_VALUE = 2 ;
-const MAX_SQUARE_AMOUNT = 64 ;
-const MIN_SQUARE_AMOUNT = 2 ;
+const COLOR_SCHEME = "red" ; // Color presets: red, green, blue, horizontalstripe, light
+const INCREASE_VALUE = 2 ; // The amount to increase the rectangles, must be a perfect square
+const MAX_SQUARE_AMOUNT = 64 ; // Must be perfect square
+const MIN_SQUARE_AMOUNT = 2 ; // Must be perfect square
 const LINE_THICKNESS = 50 ;
 //C//O//N//S//T//A//N//T//S//
 
@@ -28,7 +28,7 @@ function setup() {
 }
 
 function keyPressed() {
-  // Resets colors of a key other than shift is pressed
+  // Resets colors if a key other than shift is pressed
   if (key !== "Shift") {
     circleGrid();
   }
@@ -58,17 +58,27 @@ function mouseClicked() {
 
 function setRandomColor(x_, y_, scheme) {
   // Gives a random RGB value using a preset
-  if (scheme === "green") {
-    fillColor[0] = random(50, 100);
-    fillColor[1] = random(100, 200);
+  if (scheme === "red") {
+    fillColor[0] = random(150, 255);
+    fillColor[1] = random(50, 100);
     fillColor[2] = random(50, 100);
+  }
+  else if (scheme === "green") {
+    fillColor[0] = random(50, 100);
+    fillColor[1] = random(150, 255);
+    fillColor[2] = random(50, 100);
+  }
+  else if (scheme === "blue") {
+    fillColor[0] = random(50, 100);
+    fillColor[1] = random(50, 100);
+    fillColor[2] = random(150, 255);
   }
   else if (scheme === "light") {
     fillColor[0] = random(175, 255);
     fillColor[1] = random(200, 255);
     fillColor[2] = random(125, 150);
   }
-  else if (scheme === "horizonalStripe") {
+  else if (scheme === "horizontalStripe") {
     fillColor[0] = (x_ + y_) / 10;
     fillColor[1] = 0;
     fillColor[2] = 255 - (x_ + y_) / 10;
