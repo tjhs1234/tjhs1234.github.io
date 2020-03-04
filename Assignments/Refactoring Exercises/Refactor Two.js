@@ -8,27 +8,38 @@ function setup() {
   createCanvas(480, 270);
 }
 
+function drawRectangles() {
+  // Draws a rectangle in the quadrant where the mouse is
+  
+  if (mouseX < width / 2 && mouseY < height / 2){
+    // Top left quadrant
+    rect(0, 0, width / 2, height / 2);
+  }
+  
+  else if (mouseX > width / 2 && mouseY < height / 2){
+    // Top right quadrant
+    rect(width / 2, 0, width / 2, height / 2);
+  }
+  
+  else if (mouseX < width / 2 && mouseY > height / 2){
+    // Bottom left quadrant
+    rect(0, height / 2, width / 2, height / 2);
+  }
+  
+  else if (mouseX > width / 2 && mouseY > height / 2){
+    // Bottom right quadrant
+    rect(width / 2, height / 2, width / 2, height / 2);
+  }
+}
+
 function draw() {
   background(255);
   stroke(0);
+  fill(0);
+
+  drawRectangles();
   
   // Draws the dividing lines
-  line(240, 0, 240, 270);
-  line(0, 135, 480, 135);
-  
-  fill(0);
-  
-  // Draws a rectangle in the quadrant where the mouse is
-  if (mouseX < 240 && mouseY < 135){
-    rect(0,0,240,135);
-  }
-  else if (mouseX > 240 && mouseY < 135){
-    rect(240,0,240,135);
-  }
-  else if (mouseX < 240 && mouseY > 135){
-    rect(0,135,240,135);
-  }
-  else if (mouseX > 240 && mouseY > 135){
-    rect(240,135,240,135);
-  }
+  line(width / 2, 0, width / 2, height);
+  line(0, height / 2, width, height / 2);
 }
