@@ -1,10 +1,10 @@
 // Perlin Noise Demo
 
-let x, y, size;
+let x, y, size_;
 const MAX_CIRCLE_SIZE = 200;
 
 let sizeTime = 10;
-let dT = 0.02;
+let dT = 0.01;
 
 let perlinX = 5;
 let perlinY = 100;
@@ -14,12 +14,12 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   x = width/2;
   y = height/2;
-  size = 50;
+  size_= 50;
   background(0);
 }
 
 function draw() {
-  background(0, 0, 0, 35);
+  background(0, 0, 0, 0);
   moveCirclePerlin();
   drawCircle();
 }
@@ -28,20 +28,28 @@ function moveCirclePerlin(){
   let xSpeed = noise(perlinX);
   xSpeed = map(xSpeed, 0, 1, -10, 10);
   x += xSpeed;
-  if (x < 0) x += width;
-  else if (x > width) x -= width;
+  if (x < 0) {
+    x += width;
+  }
+  else if (x > width) {
+    x -= width;
+  }
   perlinX += movementdT;
-
+  print(xSpeed);
   let ySpeed = noise(perlinY);
   ySpeed = map(ySpeed, 0, 1, -10, 10);
   y += ySpeed;
-  if (y < 0) y+=height;
-  else if (y > height) y -= height;
+  if (y < 0) {
+    y+=height;
+  }
+  else if (y > height) {
+    y -= height;
+  }
   perlinY += movementdT;
 }
 
 function setSize(){
-  size = random(10, MAX_CIRCLE_SIZE);
+  size_ = random(10, MAX_CIRCLE_SIZE);
 }
 
 function setSizePerlin(){
@@ -59,7 +67,6 @@ function setFill() {
 function drawCircle(){
   setSizePerlin();
   setFill();
-  print(size);
   ellipseMode(CENTER);
-  ellipse(x,y,size,size);
+  ellipse(x,y,size_,size_);
 }
