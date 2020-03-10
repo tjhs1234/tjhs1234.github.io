@@ -8,11 +8,11 @@
 let currentRectangleHeight, time;
 
 let originalTime = 1000;
-let rectangleWidth = 1;
 let timeDelta = 0.01;
 
+const RECTANGLE_WIDTH = 3;
 const PAN_DELTA = 0.1;
-const DEAD_ZONE = 200;
+const PAN_DEAD_ZONE = 500;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -27,49 +27,56 @@ function setup() {
 function generateTerrain() {
   fill(0);
   time = originalTime;
-  let totalHeight = 0;
-  let rectangleNumber = 0;
+  let averageHeight = [0, 0];
   let tallestPoint = [0, 0, 0, 0, 0, 0];
 
-  for (let i = 0; i < width; i += rectangleWidth) {
+  for (let i = 0; i < width; i += RECTANGLE_WIDTH) {
     currentRectangleHeight = map(noise(time), 0, 1, 0, height * 0.8);
     
-    rect(i, height, rectangleWidth, -currentRectangleHeight);
+    rect(i, height, RECTANGLE_WIDTH, -currentRectangleHeight);
     
     time += timeDelta;
 
-    rectangleNumber += 1;
-    totalHeight += height - currentRectangleHeight;
+    averageHeight[0] += 1;
+    averageHeight[1] += height - currentRectangleHeight;
     if (currentRectangleHeight > tallestPoint[0]) {
       tallestPoint[0] = currentRectangleHeight;
       tallestPoint[1] = i;
     }
   }
   drawFlag(tallestPoint);
-  drawAverage(totalHeight, rectangleNumber);
+  drawAverage(averageHeight);
 }
 
-function drawAverage(totalHeight_,rectangleNumber_) {
+function drawAverage(averageHeight_) {
   // Draws the average bar
   fill(50, 50, 225, 95);
-  rect(0, totalHeight_ / rectangleNumber_ + 5, width, -5);
+  rect(0, averageHeight_[1] / averageHeight_[0] + 5, width, -5);
+  print(averageHeight_);
 }
 
 function drawFlag(tallestPoint_) {
-  triangle(tallestPoint_[1] + 5, height - tallestPoint_[0] - 40, tallestPoint_[1] + 5, height - tallestPoint_[0] - 20, tallestPoint_[1] + 25, height - tallestPoint_[0] - 30);
-  rect(tallestPoint_[1] - 5, height - tallestPoint_[0] + 40, 10, -80);
+  // Draws the flag at the highest point
+  strokeWeight(1.5);
+  fill (150);
+  triangle(tallestPoint_[1] + RECTANGLE_WIDTH / 2, height - tallestPoint_[0] - 40, tallestPoint_[1] + RECTANGLE_WIDTH / 2, height - tallestPoint_[0] - 20, tallestPoint_[1] + 25, height - tallestPoint_[0] - 30);
+  fill(0);
+  rect(tallestPoint_[1] - RECTANGLE_WIDTH / 2, height - tallestPoint_[0] + 40, RECTANGLE_WIDTH / 2, -80);
+  strokeWeight(0);
 }
 
 function panCamera() {
-  if (mouseX < width / 2 - DEAD_ZONE / 2) {
+  // Senses where the camera is and changes originalTime accordingly
+  if (mouseX < width / 2 - PAN_DEAD_ZONE / 2) {
     originalTime -= PAN_DELTA;
   }
-  else if (mouseX > width / 2 + DEAD_ZONE / 2) {
+  else if (mouseX > width / 2 + PAN_DEAD_ZONE / 2) {
     originalTime += PAN_DELTA;
   }
 }
 
 function keyPressed() {
+  // Changes the size of the terrain
   if (key === "w") {
     timeDelta = timeDelta * 2;  
   }
