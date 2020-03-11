@@ -29,7 +29,6 @@ function setup() {
   rectMode(CORNER);
   fill(0);
   currentRectangleHeight = 1;
-  time = 0;
   strokeWeight(0);
 }
 

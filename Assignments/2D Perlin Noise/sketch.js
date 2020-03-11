@@ -14,7 +14,7 @@ const INCREASE_VALUE = 2 ; // The amount to increase the rectangles, must be a p
 const MAX_SQUARE_AMOUNT = 512 ; // Must be a perfect square
 const MIN_SQUARE_AMOUNT = 2 ; // Must be a perfect square
 const LINE_THICKNESS = 50 ;
-const MOVEMENT_DELTA = 250;
+const MOVEMENT_DELTA = 100;
 //C//O//N//S//T//A//N//T//S//
 
 function setup() {
