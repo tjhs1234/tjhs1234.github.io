@@ -1,36 +1,29 @@
-// 12 Generative Art Demo
+// Square Art
 
-// Rectangel disarray
-
-const GRID_SIZE = 50;
+let gridSpacing = 20;
+const PADDING = 60;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   rectMode(CENTER);
 }
 
+function drawGrid() {
+  for (let x = gridSpacing / 2 + PADDING; x < width - PADDING; x += gridSpacing) {
+    for (let y = gridSpacing / 2 + PADDING; y < height - PADDING; y += gridSpacing) {
+      rect(x,y,gridSpacing,gridSpacing);
+    }
+  }  
+}
+
 function border() {
   strokeWeight(15);
-  rect(0, 0, width, height);
-  strokeWeight(1);
-}
-
-function drawRectangle(x, y, translationalDisorder, rotationalDisorder) {
-  rotate(random(-rotationalDisorder, rotationalDisorder));
-  rect(x + random(-translationalDisorder, translationalDisorder), y + random(-translationalDisorder, translationalDisorder), GRID_SIZE, GRID_SIZE);
-  rotate(0);
-}
-
-function drawGrid() {
-  for (let x = GRID_SIZE / 2; x < width; x += GRID_SIZE) {
-    for (let y = GRID_SIZE / 2; y < height; y += GRID_SIZE) {
-      drawRectangle(x, y, y / 100000, y / 100000);
-    }
-  }
+  rect(width/2,height/2,width,height);
+  strokeWeight(2);
 }
 
 function draw() {
-  background(100);
+  background(220);
+  border();
   drawGrid();
-  randomSeed(mouseX);
 }
