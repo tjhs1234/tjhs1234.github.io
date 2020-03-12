@@ -1,4 +1,4 @@
-// ̶ ̶M̶̶̶u̶̶̶l̶̶̶t̶̶̶i̶̶̶-̶̶̶C̶̶̶o̶̶̶l̶̶̶o̶̶̶u̶̶̶r̶̶̶e̶̶̶d̶̶̶ ̶̶̶G̶̶̶r̶̶̶i̶̶̶d̶̶̶ ̶̶̶A̶̶̶s̶̶̶s̶̶̶i̶̶̶g̶̶̶n̶̶̶m̶̶̶e̶̶̶n̶̶̶t̶̶̶  2D perlin noise
+// 2D Perlin Noise
 // Thomas Schorr
 // March 10th, 2020
 
