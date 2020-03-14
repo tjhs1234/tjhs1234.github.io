@@ -5,29 +5,44 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
-let sinePeriod = 1;
-let sineScale = 10;
-let currentLineX = 0;
-let currentLineY = 40;
-let increaseLineX = 1;
-let increaseLineY = 1;
+let sinePeriod = 0.4;
+let startX = 300;
+let startY = 430;
+let endX = 700;
+let SIN_UPDATE = 0.000208;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 }
 
 function drawSingleLine() {
-  for (let x = 0; x < width; x += sinePeriod) {
-    line(currentLineX, currentLineY, currentLineX + increaseLineX, currentLineX + increaseLineY);
-    currentLineX += increaseLineX;
-    currentLineY += increaseLineY;
+  let newSinePeriod = sinePeriod;
+  let stepNumber = 0;
+  let y = startY;
+  let yUpdate;
+  for (let x = startX; x < endX; x += newSinePeriod) {
+    stepNumber++;
+    yUpdate = sin(stepNumber / 75);
+    y += yUpdate;
+    if (newSinePeriod - SIN_UPDATE > 0.0001){
+      newSinePeriod -= SIN_UPDATE;
+      line(x, y, x + sinePeriod, y + yUpdate);
+    }
   }
-  currentLineX = 0;
-  currentLineY = 0;
+}
+
+function keyTyped() {
+  if (key === "a") {
+    sinePeriod += 0.1;
+  }
+  if (key === "d") {
+    sinePeriod -= 0.1;
+  }
 }
 
 function draw() {
   background(220);
+
   drawSingleLine();
-  print(currentLineX);
+
 }
